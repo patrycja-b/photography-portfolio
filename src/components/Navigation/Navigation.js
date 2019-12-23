@@ -29,6 +29,7 @@ const Navigation = ({ children }) => {
   } = useStaticQuery(query);
   return (
     <aside>
+      <h1 className="header">PATRYCJA BATKO PHOTOGRAPHY</h1>
       <nav>
         <ul>
           {menuLinks.map(({ name, link, sublinks }) => (
