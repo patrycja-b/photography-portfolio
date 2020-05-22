@@ -13,7 +13,7 @@ module.exports = {
             link: "people/baba",
           },
           {
-            name: "baba",
+            name: "second",
             link: "people/second",
           },
         ],
@@ -31,6 +31,12 @@ module.exports = {
     ],
   },
   plugins: [
+    {
+      resolve: `gatsby-plugin-layout`,
+      options: {
+        component: require.resolve(`./src/components/Layout/Layout.js`),
+      },
+    },
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
@@ -59,7 +65,7 @@ module.exports = {
         fonts: [
           {
             family: `Inria Serif`,
-            variants: [`400`],
+            variants: [`300`],
           },
           {
             family: `Open Sans`,

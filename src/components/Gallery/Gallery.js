@@ -1,12 +1,28 @@
-import PropTypes from "prop-types";
 import React from "react";
-import Layout from "../Layout/Layout";
+import { graphql } from "gatsby";
 
-const Gallery = ({ siteTitle }) => (
-  <Layout>
+const Gallery = props => (
+  <>
     <div>gallery</div>
-    <div>{siteTitle}</div>
-  </Layout>
+    <div>{props.siteTitle}</div>
+  </>
 );
+
+export const query = graphql`
+  query MyQuery($contextPath: String) {
+    allFile(filter: { relativeDirectory: { regex: $contextPath } }) {
+      edges {
+        node {
+          base
+          childImageSharp {
+            fluid {
+              base64
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
 export default Gallery;

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStaticQuery, graphql } from "gatsby";
 import { Link } from "gatsby";
 
-import "./Navigation.scss";
+import NavigationList from "../NavigationList/NavigationList";
+import "./Menu.scss";
 
 const query = graphql`
   {
@@ -21,7 +22,8 @@ const query = graphql`
   }
 `;
 
-const Navigation = ({ children }) => {
+const Menu = ({ children }) => {
+  const { isNavOpen, toggleNav } = useState(false);
   const {
     site: {
       siteMetadata: { menuLinks },
@@ -31,20 +33,10 @@ const Navigation = ({ children }) => {
     <aside>
       <h1 className="header">PATRYCJA BATKO PHOTOGRAPHY</h1>
       <nav>
-        <ul>
-          {menuLinks.map(({ name, link, sublinks }) => (
-            <>
-              <li>
-                <Link to={link}>{name}</Link>
-              </li>
-              {!!sublinks.length &&
-                sublinks.map(({ name, link }) => <Link to={link}>{name}</Link>)}
-            </>
-          ))}
-        </ul>
+        <NavigationList items={menuLinks} />
       </nav>
     </aside>
   );
 };
 
-export default Navigation;
+export default Menu;

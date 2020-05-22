@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import Navigation from "../Navigation/Navigation";
+import Menu from "../Menu/Menu";
 import "./Layout.scss";
 
 const Layout = ({ children }) => {
   return (
     <>
       <div className="main-container">
-        <Navigation />
+        <Menu />
         <main>{children}</main>
       </div>
     </>
