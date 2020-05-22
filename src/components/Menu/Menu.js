@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { useStaticQuery, graphql } from "gatsby";
-import { Link } from "gatsby";
 
 import NavigationList from "../NavigationList/NavigationList";
 import "./Menu.scss";
@@ -23,12 +22,12 @@ const query = graphql`
 `;
 
 const Menu = ({ children }) => {
-  const { isNavOpen, toggleNav } = useState(false);
   const {
     site: {
       siteMetadata: { menuLinks },
     },
   } = useStaticQuery(query);
+
   return (
     <aside>
       <h1 className="header">PATRYCJA BATKO PHOTOGRAPHY</h1>
