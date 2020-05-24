@@ -1,10 +1,10 @@
 import React from "react";
 import { graphql } from "gatsby";
+// import PropTypes from "prop-types";
 
-const Gallery = props => (
+const Gallery = () => (
   <>
     <div>gallery</div>
-    <div>{props.siteTitle}</div>
   </>
 );
 
@@ -24,5 +24,9 @@ export const query = graphql`
     }
   }
 `;
+
+Gallery.propTypes = {
+  // siteTitle: PropTypes.string.isRequired,
+};
 
 export default Gallery;

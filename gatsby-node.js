@@ -6,11 +6,11 @@ const menuLinks = [
     sublinks: [
       {
         name: "baba",
-        link: "people/baba",
+        link: "/people/baba",
       },
       {
         name: "second",
-        link: "people/second",
+        link: "/people/second",
       },
     ],
   },
@@ -20,7 +20,7 @@ const menuLinks = [
     sublinks: [
       {
         name: "mountains",
-        link: "travels/mountains",
+        link: "/travels/mountains",
       },
     ],
   },
@@ -40,7 +40,7 @@ const menuLinks = [
 //   }
 // };
 
-exports.createPages = async function({ actions, graphql }) {
+exports.createPages = async function ({ actions, graphql }) {
   // const { data } = await graphql(`
   //   query {
   //     allDirectory(filter: { name: { ne: "images" } }) {
@@ -68,10 +68,10 @@ exports.createPages = async function({ actions, graphql }) {
     }
   `);
 
-  const createSite = linksArray => {
-    linksArray.forEach(menuLink => {
+  const createSite = (linksArray) => {
+    linksArray.forEach((menuLink) => {
       console.log(!!menuLink.sublinks, "menuLunk");
-      if (!!menuLink.sublinks) {
+      if (menuLink.sublinks) {
         createSite(menuLink.sublinks);
       } else {
         const slug = menuLink.name;

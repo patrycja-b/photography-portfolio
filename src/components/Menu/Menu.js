@@ -21,7 +21,7 @@ const query = graphql`
   }
 `;
 
-const Menu = ({ children }) => {
+const Menu = () => {
   const {
     site: {
       siteMetadata: { menuLinks },
