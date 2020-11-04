@@ -1,4 +1,9 @@
 const { createFilePath } = require(`gatsby-source-filesystem`);
+const PATH = require('path');
+const dirTree = require("directory-tree");
+
+const tree = dirTree("images");
+
 const menuLinks = [
   {
     name: "people",
@@ -25,57 +30,48 @@ const menuLinks = [
     ],
   },
 ];
-// exports.onCreateNode = ({ node, getNode, actions }) => {
-//   const { createNodeField } = actions;
 
-//   // only create the slug for mdx files sourced from pages directory
-//   if (node.fileAbsolutePath && node.fileAbsolutePath.includes(`images`)) {
-//     const slug = createFilePath({ node, getNode, basePath: `images` });
-
-//     createNodeField({
-//       node,
-//       name: `slug`,
-//       value: slug,
-//     });
-//   }
-// };
+exports.onCreateNode = ({ node, getNode, actions }) => {
+  const { createNodeField } = actions;
+  if (node.internal.type === "File") {
+    // console.log(node, "NODE");
+    createNodeField({
+      node,
+      name: "slug",
+      value: `${node.relativeDirectory}/${node.id}`,
+    });
+  }
+};
 
 exports.createPages = async function ({ actions, graphql }) {
-  // const { data } = await graphql(`
-  //   query {
-  //     allDirectory(filter: { name: { ne: "images" } }) {
-  //       nodes {
-  //         absolutePath
-  //         name
-  //       }
-  //     }
-  //   }
-  // `);
-  const data = await graphql(`
-    query {
-      site {
-        siteMetadata {
-          menuLinks {
-            link
-            name
-            sublinks {
-              link
-              name
-            }
-          }
-        }
-      }
-    }
-  `);
-
   const createSite = (linksArray) => {
-    linksArray.forEach((menuLink) => {
-      console.log(!!menuLink.sublinks, "menuLunk");
+    linksArray.forEach(async (menuLink) => {
       if (menuLink.sublinks) {
         createSite(menuLink.sublinks);
       } else {
         const slug = menuLink.name;
-        console.log("create", slug);
+
+        const imgFiles = await graphql(`
+        query {
+          allFile(filter: { relativeDirectory: { regex: "${menuLink.link}/" } }) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+        `);
+
+        imgFiles.data.allFile.edges.forEach(({ node: { id } }) => {
+          actions.createPage({
+            path: `${menuLink.link}/${id}`,
+            component: require.resolve(
+              `./src/components/PortfolioItem/PortfolioItem.js`
+            ),
+            context: { imageId: id },
+          });
+        });
 
         actions.createPage({
           path: menuLink.link,
@@ -86,6 +82,5 @@ exports.createPages = async function ({ actions, graphql }) {
     });
   };
 
-  console.log(data);
   createSite(menuLinks);
 };
