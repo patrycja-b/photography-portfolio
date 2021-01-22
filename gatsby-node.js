@@ -1,8 +1,15 @@
-const { createFilePath } = require(`gatsby-source-filesystem`);
-const PATH = require('path');
-const dirTree = require("directory-tree");
+const { createFilePath } = require(`gatsby-source-filesystem`)
+const dirTree = require("directory-tree")
 
-const tree = dirTree("images");
+const fs = require("fs")
+
+const tree = dirTree("images")
+// console.log(tree);
+
+const json = JSON.stringify(tree)
+fs.writeFile("./src/menu.json", json, "utf8", function (err, result) {
+  if (err) console.log("error", err)
+})
 
 const menuLinks = [
   {
@@ -29,31 +36,32 @@ const menuLinks = [
       },
     ],
   },
-];
+]
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
-  const { createNodeField } = actions;
+  const { createNodeField } = actions
   if (node.internal.type === "File") {
     // console.log(node, "NODE");
     createNodeField({
       node,
       name: "slug",
       value: `${node.relativeDirectory}/${node.id}`,
-    });
+    })
   }
-};
+}
 
 exports.createPages = async function ({ actions, graphql }) {
-  const createSite = (linksArray) => {
-    linksArray.forEach(async (menuLink) => {
-      if (menuLink.sublinks) {
-        createSite(menuLink.sublinks);
-      } else {
-        const slug = menuLink.name;
+  const createSite = linksArray => {
+    linksArray.forEach(async menuItem => {
+      if (menuItem.children && menuItem.type === "directory") {
+        const slug = menuItem.name
+        const menuLink = menuItem.path.replace("images", "")
+
+        console.log(menuLink)
 
         const imgFiles = await graphql(`
         query {
-          allFile(filter: { relativeDirectory: { regex: "${menuLink.link}/" } }) {
+          allFile(filter: { relativeDirectory: { regex: "${menuLink}/" } }) {
             edges {
               node {
                 id
@@ -61,26 +69,28 @@ exports.createPages = async function ({ actions, graphql }) {
             }
           }
         }
-        `);
+        `)
 
         imgFiles.data.allFile.edges.forEach(({ node: { id } }) => {
           actions.createPage({
-            path: `${menuLink.link}/${id}`,
+            path: `${menuLink}/${id}`,
             component: require.resolve(
               `./src/components/PortfolioItem/PortfolioItem.js`
             ),
             context: { imageId: id },
-          });
-        });
+          })
+        })
 
         actions.createPage({
-          path: menuLink.link,
+          path: menuLink,
           component: require.resolve(`./src/components/Gallery/Gallery.js`),
-          context: { contextPath: `${menuLink.link}/` },
-        });
-      }
-    });
-  };
+          context: { contextPath: `${menuLink}/` },
+        })
 
-  createSite(menuLinks);
-};
+        createSite(menuItem.children)
+      }
+    })
+  }
+
+  createSite(tree.children)
+}

@@ -8,6 +8,7 @@ import NavigationCategorys, {
 } from "../NavigationCategory/NavigationCategory"; // navItemType,
 
 const NavigationList = ({ items }) => {
+  console.log("ITEMS", items);
   return (
     <ul className="nav-list">
       {items.map((item) => (
@@ -16,7 +17,7 @@ const NavigationList = ({ items }) => {
           {item.sublinks ? (
             <NavigationCategorys navItem={item} />
           ) : (
-            <Link to={item.link} className="nav-list__link">
+            <Link to={item.path} className="nav-list__link">
               {item.name}
             </Link>
           )}
