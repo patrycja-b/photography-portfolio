@@ -1,13 +1,10 @@
-import React from "react"
-import { graphql, Link } from "gatsby"
-import PropTypes from "prop-types"
+import React from "react";
+import { graphql, Link } from "gatsby";
+import PropTypes from "prop-types";
 
-import Img from "gatsby-image"
-// import { tree } from "../../../gatsby-node"
+import Img from "gatsby-image";
 
-import "./Gallery.scss"
-
-// console.log(tree, "GALLERY")
+import "./Gallery.scss";
 
 const Gallery = ({ data }) => (
   <>
@@ -21,12 +18,12 @@ const Gallery = ({ data }) => (
         },
       }) => (
         <Link key={nodeId} to={slug}>
-          <Img className='gallery__image' key={nodeId} fluid={fluid} />
+          <Img className="gallery__image" key={nodeId} fluid={fluid} />
         </Link>
       )
     )}
   </>
-)
+);
 
 export const query = graphql`
   query QueryGallery($contextPath: String) {
@@ -47,10 +44,10 @@ export const query = graphql`
       }
     }
   }
-`
+`;
 
 Gallery.propTypes = {
   data: PropTypes.object.isRequired,
-}
+};
 
-export default Gallery
+export default Gallery;

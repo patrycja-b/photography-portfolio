@@ -8,21 +8,21 @@ import NavigationCategorys, {
 } from "../NavigationCategory/NavigationCategory"; // navItemType,
 
 const NavigationList = ({ items }) => {
-  console.log("ITEMS", items);
   return (
     <ul className="nav-list">
-      {items.map((item) => (
-        <li key={item.name}>
-          {/* <div className="nav-list__link">{name}</div> */}
-          {item.sublinks ? (
-            <NavigationCategorys navItem={item} />
-          ) : (
-            <Link to={item.path} className="nav-list__link">
-              {item.name}
-            </Link>
-          )}
-        </li>
-      ))}
+      {items.map((item) => {
+        return (
+          <li key={item.name}>
+            {item.sublinks && item.sublinks[0].type === "file" ? (
+              <Link to={item.path} className="nav-list__link">
+                {item.name}
+              </Link>
+            ) : (
+              <NavigationCategorys navItem={item} />
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 };
